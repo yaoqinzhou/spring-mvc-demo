@@ -25,8 +25,14 @@
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
     <!-- 读取数据库配置信息  自定义了配置文件读取方法 -->
-    <bean class="com.example.config.DecryptPropertyPlaceholderConfigurer"
-          p:location="classpath:jdbc.properties"/>
+    <bean class="com.example.config.DecryptPropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:redis.properties</value>
+            </list>
+        </property>
+    </bean>
 
     <bean id="demoDataSource" class="com.alibaba.druid.pool.DruidDataSource"
           destroy-method="close"
@@ -60,4 +66,19 @@
         </tx:attributes>
     </tx:advice>
     <!-- 数据源事务配置 end -->
+
+    <!-- redis config start -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.ip}"/>
+        <property name="port" value="${redis.port}"/>
+    </bean>
+
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+    </bean>
+    <!-- redis config end -->
 </beans>
