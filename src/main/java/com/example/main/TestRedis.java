@@ -13,10 +13,6 @@ public class TestRedis {
 
             RedisService redisService = (RedisService)appContext.getBean("redisService");
 
-            //redisService.getMailInfo();
-
-            redisService.addSet();
-
         }catch(Exception ex){
             ex.printStackTrace();
         }
